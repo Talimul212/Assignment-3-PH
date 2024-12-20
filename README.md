@@ -25,5 +25,5 @@ Ensure you have the following installed on your system:
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd assignment-2
+   cd Blog-Assignment-3
    
