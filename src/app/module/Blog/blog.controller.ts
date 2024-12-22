@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import { BlogServices } from './blog.services';
 
 // Create a blog
-export const createBlogController = async (req: Request, res: Response) => {
+const createBlogController = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id; // Assuming user ID is added to the request object by middleware
     console.log(userId);
@@ -24,17 +24,12 @@ export const createBlogController = async (req: Request, res: Response) => {
 };
 
 // Update a blog
-export const updateBlogController = async (req: Request, res: Response) => {
+const updateBlogController = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id;
     const blogId = req.params.id;
-    console.log(req);
 
-    const updatedBlog = await BlogServices.updateBlogService(
-      blogId,
-      userId,
-      req.body,
-    );
+    const updatedBlog = await BlogServices.updateBlogService(blogId, req.body);
+
     res.status(200).json({
       success: true,
       message: 'Blog updated successfully',
@@ -42,16 +37,20 @@ export const updateBlogController = async (req: Request, res: Response) => {
       data: updatedBlog,
     });
   } catch (error: any) {
-    res.status(400).json({ success: false, message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 // Delete a blog
-export const deleteBlogController = async (req: Request, res: Response) => {
+const deleteBlogController = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id;
     const blogId = req.params.id;
-    await BlogServices.deleteBlogService(blogId, userId);
+    console.log(blogId);
+
+    await BlogServices.deleteBlogService(blogId);
     res.status(200).json({
       success: true,
       message: 'Blog deleted successfully',
@@ -63,7 +62,7 @@ export const deleteBlogController = async (req: Request, res: Response) => {
 };
 
 // Get all blogs
-export const getAllBlogsController = async (req: Request, res: Response) => {
+const getAllBlogsController = async (req: Request, res: Response) => {
   try {
     const blogs = await BlogServices.getAllBlogsService(req.query);
     res.status(200).json({
@@ -78,7 +77,7 @@ export const getAllBlogsController = async (req: Request, res: Response) => {
 };
 
 // Get a single blog
-export const getSingleBlogController = async (req: Request, res: Response) => {
+const getSingleBlogController = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
     const blog = await BlogServices.getSingleBlogService(blogId);
@@ -94,10 +93,7 @@ export const getSingleBlogController = async (req: Request, res: Response) => {
 };
 
 // Admin: Delete any blog
-export const adminDeleteBlogController = async (
-  req: Request,
-  res: Response,
-) => {
+const adminDeleteBlogController = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
     await BlogServices.adminDeleteBlogService(blogId);
@@ -112,7 +108,7 @@ export const adminDeleteBlogController = async (
 };
 
 // Admin: Block a user
-export const blockUserController = async (req: Request, res: Response) => {
+const blockUserController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
     const blockedUser = await BlogServices.blockUserService(userId);
