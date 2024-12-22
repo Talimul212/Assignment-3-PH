@@ -20,5 +20,19 @@ export const loginUserService = async (email: string, password: string) => {
     throw new Error('Invalid credentials or blocked user');
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error('Invalid credentials');
-  return generateToken({ id: user._id, role: user.role });
+  return generateToken({ id: user._id.toString(), role: user.role });
+};
+
+const getAllUsersFromDB = async () => {
+  const result = await User.find();
+  return result;
+};
+// getsingleuser
+const getSingleUserFromDB = async (_id: string) => {
+  const result = await User.findOne({ _id });
+  return result;
+};
+export const UserServices = {
+  getAllUsersFromDB,
+  getSingleUserFromDB,
 };

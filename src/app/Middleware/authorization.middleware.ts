@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
 // middleware/authorization.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt.util';
@@ -11,7 +13,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     if (decoded.role !== 'admin') throw new Error('Forbidden');
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch (error: any) {
     res.status(403).json({ success: false, message: error.message });
   }
 };

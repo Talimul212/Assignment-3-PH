@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import router from './app/router';
@@ -10,6 +11,7 @@ app.use(cors());
 
 //route call
 app.use('/api', router);
+
 //server call
 app.get('/', (req: Request, res: Response) => {
   res.send({
