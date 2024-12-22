@@ -9,12 +9,11 @@ import { BlogController } from './blog.controller';
 const router = express.Router();
 
 // Public Routes
-router.get('/', BlogController.getAllBlogsController); // Get all blogs
-router.get('/:id', BlogController.getSingleBlogController); // Get a single blog
+router.get('/', BlogController.getAllBlogsController);
+router.get('/:id', BlogController.getSingleBlogController);
 
 // User Routes (Protected)
-router.post('/', BlogController.createBlogController); // Create a blog (authenticated user)
-router.patch('/:id', BlogController.updateBlogController); // Update a blog (authenticated user)
-router.delete('/:id', BlogController.deleteBlogController); // Delete a blog (authenticated user)
-
-export const BlogRoutes = router;
+router.post('/', BlogController.createBlogController);
+router.patch('/:id', BlogController.updateBlogController);
+router.delete('/:id', BlogController.deleteBlogController);
+export const blogRoutes = router;

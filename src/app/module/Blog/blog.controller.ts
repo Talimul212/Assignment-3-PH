@@ -10,6 +10,7 @@ import { BlogServices } from './blog.services';
 export const createBlogController = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id; // Assuming user ID is added to the request object by middleware
+    console.log(userId);
     const blog = await BlogServices.createBlogService(req.body, userId);
     res.status(201).json({
       success: true,
@@ -27,6 +28,8 @@ export const updateBlogController = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id;
     const blogId = req.params.id;
+    console.log(req);
+
     const updatedBlog = await BlogServices.updateBlogService(
       blogId,
       userId,

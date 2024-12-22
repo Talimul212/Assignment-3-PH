@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 import { Router } from 'express';
 import userRouter from '../module/User/user.route';
-import { BlogRoutes } from '../module/Blog/blog.routes';
+import { blogRoutes } from '../module/Blog/blog.routes';
 // import { adminRoutes } from '../module/Admin/admin.routes';
 
 const router = Router();
@@ -18,8 +18,8 @@ const moduleRoutes: any[] = [
   //   route: adminRoutes,
   // },
   {
-    path: '/admin',
-    route: BlogRoutes,
+    path: '/blogs',
+    route: blogRoutes,
   },
 ];
 

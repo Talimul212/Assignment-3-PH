@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Request, Response } from 'express';
-import { BlogModel } from '../Blog/blog.modes';
 import { User } from '../User/user.model';
 import { TUser } from '../User/user.interface';
+import { Blog } from '../Blog/blog.modes';
 
 const updateUserStatausFromDB = async (
   _id: string,
@@ -26,7 +26,7 @@ const updateUserStatausFromDB = async (
   return result;
 };
 const deleteOneBlogsFromDB = async (_id: string) => {
-  const result = await BlogModel.findOneAndDelete({ _id });
+  const result = await Blog.findOneAndDelete({ _id });
   // const result=await BlogModel.findById({_id}).deleteOne({_id})
   return result;
 };
