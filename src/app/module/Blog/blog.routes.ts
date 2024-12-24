@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 /* eslint-disable prettier/prettier */
 // blog.route.ts
 
@@ -25,6 +25,7 @@ router.post(
 
   BlogController.createBlogController,
 );
+
 router.patch('/:id', auth(User_Role.user), BlogController.updateBlogController);
 router.delete(
   '/:id',
