@@ -1,6 +1,17 @@
 # Assignment 3
 
 The goal of this assignment is to develop a backend for a blogging platform where users can write, update, and delete their blogs. The system will have two roles: Admin and User. The Admin has special permissions to manage users and their blogs, while users can perform CRUD operations on their own blogs. The backend will include secure authentication, role-based access control, and a public API for viewing blogs with search, sort, and filter functionalities.
+
+### Admin:
+Will be created manually in the database with predefined credentials.
+Can delete any blog.
+Can block any user by updating a property isBlocked.
+Cannot update any blog.
+### User:
+Can register and log in.
+Can create blogs (only when logged in).
+Can update and delete their own blogs.
+Cannot perform admin actions.
 ## Features
 
 - **TypeScript**: Type-safe development for better reliability.
@@ -27,3 +38,4 @@ Ensure you have the following installed on your system:
    git clone <repository-url>
    cd Blog-Assignment-3
    
+### APi
