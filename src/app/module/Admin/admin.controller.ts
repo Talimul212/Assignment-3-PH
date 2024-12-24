@@ -1,8 +1,11 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Request, Response } from 'express';
 import { AdminServices } from './admin.service';
+import { User } from '../User/user.model';
 
 const DeleteSingleBlog = async (req: Request, res: Response) => {
   try {
@@ -24,14 +27,26 @@ const DeleteSingleBlog = async (req: Request, res: Response) => {
 };
 
 //
-const updateUserStatus = async (req: Request, res: Response): Promise<void> => {
+const updateUserStatus = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { id } = req.params;
-    const user = req.body;
-    const result = await AdminServices.updateUserStatausFromDB(id, user);
+    const { userId } = req.params;
+
+    // Find user details to verify existence
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        statusCode: 404,
+      });
+    }
+
+    // Call service to update status
+    const result = await AdminServices.updateUserStatusFromDB(userId);
+
     res.status(200).json({
       success: true,
-      message: 'user blocked successfully',
+      message: 'User blocked successfully',
       statusCode: 200,
     });
   } catch (error) {

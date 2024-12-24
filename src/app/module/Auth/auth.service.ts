@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const loginUser = async (payload: TLoginUser) => {
-  console.log(payload);
   // checking if user exist or not
   const isUserExist = await User.findOne({ email: payload?.email });
   console.log(isUserExist);

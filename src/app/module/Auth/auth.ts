@@ -1,41 +1,43 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
 import { NextFunction, Request, Response } from 'express';
-import { catchAsync } from './validateRequest';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '../../config';
 import { TuserRole } from '../User/user.interface';
-
+import { catchAsync } from './validateRequest';
+import { User } from '../User/user.model';
+import { AuthorizationError, NotFoundError } from '../../utils/customErrors';
 const auth = (...requiredRoles: TuserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.headers.authorization);
     const token = req.headers.authorization;
+
     if (!token) {
-      res.status(401).json({
-        success: false,
-        message: 'you are not authorized user',
-      });
+      throw new Error('You are not authorized!');
     }
-    jwt.verify(
-      token as string,
-      config.jwt_access_secret as string,
-      function (err, decoded) {
-        if (err) {
-          res.status(401).json({
-            success: false,
-            message: 'you are not authorized user',
-          });
-        }
-        const role = (decoded as JwtPayload).role;
-        if (requiredRoles && !requiredRoles.includes(role)) {
-          res.status(401).json({
-            success: false,
-            message: 'you are not authorized user',
-          });
-        }
-        console.log(decoded);
-        req.user = decoded as JwtPayload;
-        console.log(req.user);
-      },
-    );
+
+    const decoded = jwt.verify(token, 'secret') as JwtPayload;
+
+    const { role, id } = decoded;
+
+    const user = await User.findOne({ _id: id });
+    console.log(user);
+
+    if (!user) {
+      throw new NotFoundError('This user is not found !');
+    }
+
+    // checking if the user is inactive
+    const userStatus = user?.isBlocked;
+
+    if (userStatus === true) {
+      throw new Error('This user is blocked ! !');
+    }
+
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AuthorizationError('You are not authorized');
+    }
+
+    req.user = decoded as JwtPayload;
+
     next();
   });
 };

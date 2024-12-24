@@ -5,12 +5,13 @@
 
 import { Request, Response } from 'express';
 import { BlogServices } from './blog.services';
+import { NotFoundError } from '../../utils/customErrors';
 
 // Create a blog
 const createBlogController = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id; // Assuming user ID is added to the request object by middleware
-    console.log(userId);
+    const userId = req.user.id;
+
     const blog = await BlogServices.createBlogService(req.body, userId);
     res.status(201).json({
       success: true,
@@ -29,6 +30,9 @@ const updateBlogController = async (req: Request, res: Response) => {
     const blogId = req.params.id;
 
     const updatedBlog = await BlogServices.updateBlogService(blogId, req.body);
+    if (!updatedBlog) {
+      throw new NotFoundError('Blog not found');
+    }
 
     res.status(200).json({
       success: true,
@@ -48,9 +52,11 @@ const updateBlogController = async (req: Request, res: Response) => {
 const deleteBlogController = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
-    console.log(blogId);
 
     await BlogServices.deleteBlogService(blogId);
+    if (!BlogServices) {
+      throw new NotFoundError('Blog not found');
+    }
     res.status(200).json({
       success: true,
       message: 'Blog deleted successfully',
@@ -81,6 +87,9 @@ const getSingleBlogController = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
     const blog = await BlogServices.getSingleBlogService(blogId);
+    if (!blog) {
+      throw new NotFoundError('Blog not found');
+    }
     res.status(200).json({
       success: true,
       message: 'Blog fetched successfully',

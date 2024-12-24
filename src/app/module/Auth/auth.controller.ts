@@ -1,5 +1,5 @@
+import catchAsync from '../../utils/catchAsync';
 import { AuthServices } from './auth.service';
-import { catchAsync } from './validateRequest';
 
 const loginUser = catchAsync(async (req, res) => {
   try {

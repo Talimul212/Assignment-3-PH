@@ -9,8 +9,6 @@ export interface TUser {
   password: string;
   role: 'admin' | 'user';
   isBlocked: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 export interface Usermodels extends Model<TUser> {
   // mystaticMethod():number

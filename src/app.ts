@@ -2,6 +2,7 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import router from './app/router';
+import { errorHandler } from './app/utils/errorHandler';
 const app: Application = express();
 
 //parsers
@@ -12,6 +13,8 @@ app.use(cors());
 //route call
 app.use('/api', router);
 
+// Global Error Handler
+app.use(errorHandler);
 //server call
 app.get('/', (req: Request, res: Response) => {
   res.send({

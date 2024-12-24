@@ -22,7 +22,10 @@ export const authenticate = async (
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as AuthPayload;
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_Access_SECRET!,
+    ) as AuthPayload;
     const user = await User.findById(decoded.id);
     if (!user || user.isBlocked) {
       return res.status(403).json({ message: 'Access Denied' });

@@ -6,31 +6,32 @@ import { User } from '../User/user.model';
 import { TUser } from '../User/user.interface';
 import { Blog } from '../Blog/blog.modes';
 
-const updateUserStatausFromDB = async (
-  _id: string,
-  payload: Partial<TUser>,
-) => {
-  const { name, email, password, isBlocked, ...remainingUserData } = payload;
-  const modifiedUpdatedData: Record<string, unknown> = {
-    ...remainingUserData,
-  };
-  if (isBlocked === false) {
-    modifiedUpdatedData[`isBlocked`] = true;
+const updateUserStatusFromDB = async (_id: string) => {
+  // Find the user by ID
+  const user = await User.findById(_id);
+
+  // If the user is already blocked, return immediately
+  if (!user) {
+    throw new Error('User not found');
   }
 
-  const result = await User.findByIdAndUpdate(_id, modifiedUpdatedData, {
-    new: true,
-    runValidators: true,
-  });
-  // const result=await BlogModel.findOneAndUpdate({_id})
+  // Update isBlocked property directly
+  const result = await User.findByIdAndUpdate(
+    _id,
+    { isBlocked: true }, // Update isBlocked to true
+    { new: true, runValidators: true }, // Options to return updated document and validate
+  );
+
+  console.log(result); // For debugging purposes
   return result;
 };
+
 const deleteOneBlogsFromDB = async (_id: string) => {
   const result = await Blog.findOneAndDelete({ _id });
   // const result=await BlogModel.findById({_id}).deleteOne({_id})
   return result;
 };
 export const AdminServices = {
-  updateUserStatausFromDB,
+  updateUserStatusFromDB,
   deleteOneBlogsFromDB,
 };

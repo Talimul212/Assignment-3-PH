@@ -6,6 +6,4 @@ export interface TBlog {
   content: string;
   author: Types.ObjectId;
   isPublished?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
 }

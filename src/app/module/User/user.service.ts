@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 // user.service.ts
 
-import { generateToken } from '../../utils/jwt.util';
+import jwt from 'jsonwebtoken';
 import { User } from './user.model';
 import bcrypt from 'bcrypt';
 
@@ -15,12 +15,19 @@ export const registerUserService = async (userData: any) => {
 };
 
 export const loginUserService = async (email: string, password: string) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
   if (!user || user.isBlocked)
     throw new Error('Invalid credentials or blocked user');
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user?.password);
   if (!isMatch) throw new Error('Invalid credentials');
-  return generateToken({ id: user._id.toString(), role: user.role });
+
+  const jwtPayload = {
+    id: user?.id,
+    role: user?.role,
+  };
+
+  const token = jwt.sign(jwtPayload, 'secret', { expiresIn: '1d' });
+  return token;
 };
 
 const getAllUsersFromDB = async () => {

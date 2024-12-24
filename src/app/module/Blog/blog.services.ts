@@ -10,12 +10,20 @@ import { Blog } from './blog.modes';
 // Create a blog
 export const createBlogService = async (blogData: any, userId: string) => {
   const { title, content } = blogData;
+  const details = await User.findById(userId);
   const blog = await Blog.create({
     title,
     content,
     author: new Types.ObjectId(userId),
   });
-  return blog;
+  return {
+    _id: blog._id,
+    title: blog.title,
+    content: blog.content,
+    author: {
+      details,
+    },
+  };
 };
 
 // Update a blog
@@ -59,6 +67,8 @@ export const getAllBlogsService = async (query: any) => {
   }
 
   const blogs = await Blog.find(filterQuery).sort(sortQuery).populate('author');
+  console.log(blogs);
+
   return blogs;
 };
 
