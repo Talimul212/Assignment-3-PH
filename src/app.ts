@@ -13,8 +13,6 @@ app.use(cors());
 //route call
 app.use('/api', router);
 
-// Global Error Handler
-app.use(errorHandler);
 //server call
 app.get('/', (req: Request, res: Response) => {
   res.send({
@@ -22,5 +20,7 @@ app.get('/', (req: Request, res: Response) => {
     message: 'Server Live ⚡',
   });
 });
+// Global Error Handler
+app.use(errorHandler);
 
 export default app;
