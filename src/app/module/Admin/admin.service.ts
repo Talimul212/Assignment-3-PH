@@ -22,7 +22,6 @@ const updateUserStatusFromDB = async (_id: string) => {
     { new: true, runValidators: true }, // Options to return updated document and validate
   );
 
-  console.log(result); // For debugging purposes
   return result;
 };
 

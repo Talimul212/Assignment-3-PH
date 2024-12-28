@@ -4,7 +4,11 @@
 // blog.controller.ts
 
 import { Request, Response } from 'express';
-import { BlogServices } from './blog.services';
+import {
+  BlogServices,
+  deleteBlogService,
+  updateBlogService,
+} from './blog.services';
 import { NotFoundError } from '../../utils/customErrors';
 
 // Create a blog
@@ -24,15 +28,14 @@ const createBlogController = async (req: Request, res: Response) => {
   }
 };
 
-// Update a blog
-const updateBlogController = async (req: Request, res: Response) => {
+// Update Blog Controller
+export const updateBlogController = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
+    const userId = req.user.id; // Get user ID from authenticated request
+    console.log('update:', userId);
 
-    const updatedBlog = await BlogServices.updateBlogService(blogId, req.body);
-    if (!updatedBlog) {
-      throw new NotFoundError('Blog not found');
-    }
+    const updatedBlog = await updateBlogService(blogId, req.body, userId);
 
     res.status(200).json({
       success: true,
@@ -48,22 +51,25 @@ const updateBlogController = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a blog
-const deleteBlogController = async (req: Request, res: Response) => {
+// Delete Blog Controller
+export const deleteBlogController = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
+    const userId = req.user.id; // Get user ID from authenticated request
+    console.log('Delete', userId);
 
-    await BlogServices.deleteBlogService(blogId);
-    if (!BlogServices) {
-      throw new NotFoundError('Blog not found');
-    }
+    await deleteBlogService(blogId, userId);
+
     res.status(200).json({
       success: true,
       message: 'Blog deleted successfully',
       statusCode: 200,
     });
   } catch (error: any) {
-    res.status(400).json({ success: false, message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

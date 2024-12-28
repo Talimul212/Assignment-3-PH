@@ -26,22 +26,29 @@ export const createBlogService = async (blogData: any, userId: string) => {
   };
 };
 
-// Update a blog
-export const updateBlogService = async (blogId: string, updateData: any) => {
+// Update Blog Service
+export const updateBlogService = async (
+  blogId: string,
+  updateData: any,
+  userId: string,
+) => {
   const blog = await Blog.findOneAndUpdate(
-    { _id: blogId }, // Ensure the user owns the blog
+    { _id: blogId, author: userId }, // Ensure the user owns the blog
     updateData,
-    { new: true }, // Return updated document
+    { new: true, runValidators: true }, // Return updated document
   );
+
   if (!blog) throw new Error('Blog not found or not authorized to update.');
   return blog;
 };
 
-// Delete a blog
-export const deleteBlogService = async (blogId: string) => {
+// Delete Blog Service
+export const deleteBlogService = async (blogId: string, userId: string) => {
   const blog = await Blog.findOneAndDelete({
     _id: blogId,
+    author: userId, // Ensure the user owns the blog
   });
+
   if (!blog) throw new Error('Blog not found or not authorized to delete.');
   return blog;
 };
