@@ -46,7 +46,7 @@ export const updateBlogService = async (
 export const deleteBlogService = async (blogId: string, userId: string) => {
   const blog = await Blog.findOneAndDelete({
     _id: blogId,
-    author: userId, // Ensure the user owns the blog
+    author: userId,
   });
 
   if (!blog) throw new Error('Blog not found or not authorized to delete.');
