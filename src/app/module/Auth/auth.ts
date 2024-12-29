@@ -4,13 +4,17 @@ import { TuserRole } from '../User/user.interface';
 import { catchAsync } from './validateRequest';
 import { User } from '../User/user.model';
 import { AuthorizationError, NotFoundError } from '../../utils/customErrors';
+
 const auth = (...requiredRoles: TuserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    // Validate Bearer Token
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new Error('You are not authorized!');
     }
+
+    const token = authHeader.split(' ')[1]; // Extract token after 'Bearer '
 
     const decoded = jwt.verify(token, 'secret') as JwtPayload;
 
@@ -20,16 +24,15 @@ const auth = (...requiredRoles: TuserRole[]) => {
     console.log(user);
 
     if (!user) {
-      throw new NotFoundError('This user is not found !');
+      throw new NotFoundError('This user is not found!');
     }
 
-    // checking if the user is inactive
-    const userStatus = user?.isBlocked;
-
-    if (userStatus === true) {
-      throw new Error('This user is blocked ! !');
+    // Check if the user is blocked
+    if (user.isBlocked) {
+      throw new Error('This user is blocked!');
     }
 
+    // Check user roles
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AuthorizationError('You are not authorized');
     }
